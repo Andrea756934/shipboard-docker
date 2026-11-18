@@ -3,7 +3,7 @@
 # - ogni modifica al codice rifa' anche il restore (nessuna cache utile)
 # - il processo gira come root
 # Build: docker build -f docs/esempi/Dockerfile.sbagliato -t shipboard-api:sbagliato src/ShipBoard.Api
-FROM mcr.microsoft.com/dotnet/sdk:10.0
+FROM mcr.microsoft.com/dotnet/sdk:11.0
 WORKDIR /app
 COPY . .
 RUN dotnet publish -c Release -o out

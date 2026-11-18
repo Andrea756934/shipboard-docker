@@ -32,10 +32,10 @@ Obiettivo: un'immagine piccola, veloce da ricostruire, che non gira come root.
    docker history shipboard-api:sbagliato
    ```
 2. Scrivete `src/ShipBoard.Api/Dockerfile` **multi-stage**:
-   - stage `build` da `mcr.microsoft.com/dotnet/sdk:10.0`
+   - stage `build` da `mcr.microsoft.com/dotnet/sdk:11.0`
    - copiate **prima** il `.csproj` e fate `dotnet restore`, **poi** il resto del codice
    - `dotnet publish -c Release -o /app`
-   - stage finale da `mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled`, solo il risultato del publish
+   - stage finale da `mcr.microsoft.com/dotnet/aspnet:11.0-resolute-chiseled`, solo il risultato del publish
    - `USER $APP_UID`, porta 8080
 3. Aggiungete `.dockerignore` (`bin/`, `obj/`).
 4. Verifica:

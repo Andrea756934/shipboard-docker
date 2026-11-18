@@ -36,7 +36,7 @@ Avete 40 minuti: fate piu' casi possibile. Chi finisce prima: aiutate una coppia
 
 **Sfide per chi e' avanti**
 - Aggiungete un `healthcheck` al servizio `api` in `compose.yaml` e fate dipendere `web` da `api` con `condition: service_healthy`. Problema: l'immagine chiseled non ha ne' shell ne' `curl`. Come fate?
-- `docker scout cves shipboard-api` (o `trivy image shipboard-api`): quante vulnerabilita' ha la vostra immagine? E con l'immagine `aspnet:10.0` normale?
+- `docker scout cves shipboard-api` (o `trivy image shipboard-api`): quante vulnerabilita' ha la vostra immagine? E con l'immagine `aspnet:11.0` normale?
 
 ## 6. Immagini su GitHub Container Registry (step-06)
 
@@ -233,7 +233,7 @@ Obiettivo: un solo `dotnet run` che avvia PostgreSQL, API e frontend, con la ste
    <Project Sdk="Aspire.AppHost.Sdk/13.6.5">
      <PropertyGroup>
        <OutputType>Exe</OutputType>
-       <TargetFramework>net10.0</TargetFramework>
+       <TargetFramework>net11.0</TargetFramework>
        <ImplicitUsings>enable</ImplicitUsings>
        <Nullable>enable</Nullable>
      </PropertyGroup>

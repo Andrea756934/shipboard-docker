@@ -4,7 +4,7 @@ Bacheca di ticket usata nel corso **Modern DevOps** (ITS Mario Volpato).
 
 | Cartella | Cosa c'e' |
 | --- | --- |
-| `src/ShipBoard.Api` | API .NET 10 (minimal API + EF Core) |
+| `src/ShipBoard.Api` | API .NET 11 (minimal API + EF Core) |
 | `tests/ShipBoard.Api.Tests` | Test xUnit con il database in memoria |
 | `web` | Frontend Angular |
 | `.github/workflows` | Pipeline CI |
