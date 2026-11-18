@@ -3,71 +3,22 @@ name: ci
 on:
   push:
     branches: [main]
-  pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "11.0.x"
-      - run: dotnet restore
-      - run: dotnet build --no-restore -c Release
-      - run: dotnet test --no-build -c Release
 
-  web:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - run: npm ci
-      - run: npm run build
+      - name: Login a GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
-  deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: [api, web]
-    runs-on: ubuntu-latest
-    environment: production
-    concurrency:
-      group: azure-production
-      cancel-in-progress: false
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Sign in to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - name: Sign in to Azure Container Registry
-        env:
-          ACR_NAME: ${{ vars.ACR_NAME }}
-        run: az acr login --name "$ACR_NAME"
-      - name: Build and push API image
-        env:
-          ACR_LOGIN_SERVER: ${{ vars.ACR_LOGIN_SERVER }}
-          IMAGE_TAG: ${{ github.sha }}
+      - name: Build e push dell'immagine
         run: |
-          docker build -t "$ACR_LOGIN_SERVER/shipboard-api:$IMAGE_TAG" ./src/ShipBoard.Api
-          docker push "$ACR_LOGIN_SERVER/shipboard-api:$IMAGE_TAG"
-      - name: Deploy API
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ vars.AZURE_API_APP_NAME }}
-          images: ${{ vars.ACR_LOGIN_SERVER }}/shipboard-api:${{ github.sha }}
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}-api
+          docker build -t $IMAGE:latest ./src/ShipBoard.Api
+          docker push $IMAGE:latest
